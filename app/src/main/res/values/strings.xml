@@ -1,0 +1,23 @@
+<resources>
+<string name="app_name">ChallengesApp</string>
+<string name="action_settings">Settings</string>
+<string name="challengeName">Name of the challenge :</string>
+<string name="challengeNumber">Challenge of day #%1$d</string>
+<string name="newChallenge">New challenge</string>
+<string name="hintChallengeName">Name of the challenge</string>
+<string name="hintChallengeDuration">30</string>
+<string name="challengeDuration">Duration</string>
+<string name="daily">daily</string>
+<string name="weekly">weekly</string>
+<string name="monthly">monthly</string>
+<string name="challengeFrequency">Frequency</string>
+<string name="nullDuration">Cannot create a 0 day challenge</string>
+<string name="challengesHeader">Challenges</string>
+<string name="challengeModification">Start your challenge?</string>
+<string name="deleteChallenge">delete the challenge?</string>
+<string name="startChallenge">start the challenge?</string>
+<string name="modifyChallenge">modify challenge</string>
+    <string name="validateChallenge">mark as done</string>
+    <string name="previousActionMissing">add previous challenge first</string>
+    <string name="notifTitle">Action of the day</string>
+</resources>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:rowCount="2"
+    android:columnCount="6">
+
+    <TextView
+        android:id="@+id/challengeName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="0"
+        android:layout_column="0" />
+    <TextView
+        android:id="@+id/challengeStartDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="1"
+        android:layout_column="2"/>
+    <TextView
+        android:id="@+id/challengeNextAction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="1"
+        android:layout_column="3"/>
+    <TextView
+        android:id="@+id/challengeStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=">"
+        android:layout_row="0"
+        android:layout_column="4"/>
+    <TextView
+        android:id="@+id/challengeModify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="..."
+        android:layout_row="1"
+        android:layout_column="4" />
+    <TextView
+        android:id="@+id/challengeValidate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="V"
+        android:layout_row="0"
+        android:layout_column="5"/>
+    <TextView
+    android:id="@+id/challengeRemove"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="X"
+    android:elevation="0dp"
+    android:layout_row="1"
+    android:layout_column="5"/>
+</GridLayout>
