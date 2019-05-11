@@ -83,9 +83,6 @@ public class ChallengeModificationDialogue extends DialogFragment {
                     e.printStackTrace();
                 }
 
-                NotificationSender sender = new NotificationSender("titre", "test sender", context);
-                sender.sendNotif();
-
                 Intent notifyIntent = new Intent(context ,NotificationReceiver.class);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast
                         (context, 1, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);

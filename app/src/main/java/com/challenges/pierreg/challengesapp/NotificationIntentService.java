@@ -24,7 +24,17 @@ public class NotificationIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        NotificationSender sender = new NotificationSender("titre", "test sender", this);
-        sender.sendNotif();
+
+        Intent notifyIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 2, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationCompat.Builder notifBuilder =  new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_add_black_24dp)
+                .setContentTitle("titre")
+                .setContentText("all in one")
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(1, notifBuilder.build());
     }
 }
