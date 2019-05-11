@@ -1,6 +1,5 @@
 package com.challenges.pierreg.challengesapp;
 
-import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -34,6 +33,7 @@ public class NotificationSender{
                 .setContentTitle(m_title)
                 .setContentText(m_message)
                 .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
     }
 
