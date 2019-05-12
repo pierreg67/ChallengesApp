@@ -1,14 +1,9 @@
 package com.challenges.pierreg.challengesapp;
 
-import android.app.AlarmManager;
 import android.app.DialogFragment;
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +32,8 @@ public class ChallengeModificationDialogue extends DialogFragment {
     private LinearLayout clickedLayout;
     private Context context;
     private int challengeId;
+    private Button startButton;
+    private Button doneButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,6 +43,14 @@ public class ChallengeModificationDialogue extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialogue_challenge_modification, container, false);
+        startButton = (Button) view.findViewById(R.id.startChallenge);
+        doneButton = (Button) view.findViewById(R.id.validateChallenge);
+        TextView dateView = (TextView)clickedLayout.getChildAt(2);
+        if(dateView.getText().toString().startsWith("start with")){
+            doneButton.setVisibility(View.GONE);
+        } else{
+            startButton.setVisibility(View.GONE);
+        }
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         ((Button) view.findViewById(R.id.deleteChallenge)).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -83,12 +88,14 @@ public class ChallengeModificationDialogue extends DialogFragment {
                     e.printStackTrace();
                 }
 
-                Intent notifyIntent = new Intent(context ,NotificationReceiver.class);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast
-                        (context, 1, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,  System.currentTimeMillis(),
-                        1000 * 60 , pendingIntent);
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.set(Calendar.HOUR_OF_DAY, 21);
+//                calendar.set(Calendar.MINUTE, 33);
+//                NotificationPlanner.changeNotifDate(calendar);
+//                NotificationPlanner.start(context);
+                NotificationIntentService ser = new NotificationIntentService();
+                ser.sendNotif(context);
+
             }
         });
 

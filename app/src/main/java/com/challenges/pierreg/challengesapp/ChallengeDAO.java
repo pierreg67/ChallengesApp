@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -19,7 +18,9 @@ public class ChallengeDAO extends DAOBase {
     private static final String TABLE_NAME = "Challenge";
     private static final String KEY = "id";
     private static final String NAME = "name";
-    private static final String STARTDATE = "date";
+    private static final String STARTDATEYEAR = "startYear";
+    private static final String STARTDATEMONTH = "startMonth";
+    private static final String STARTDATEDAY = "startDay";
     private static final String DURATION = "duration";
     private static final String FREQUENCY = "frequency";
     private static final String LISTCHALLENGE = "listChallenges";
@@ -27,7 +28,9 @@ public class ChallengeDAO extends DAOBase {
     public static final String TABLE_CREATE = "CREATE TABLE " + TABLE_NAME + " (" +
             KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             NAME + " TEXT," +
-            STARTDATE + " REAL," +
+            STARTDATEYEAR + " REAL," +
+            STARTDATEMONTH + " REAL," +
+            STARTDATEDAY + " REAL," +
             FREQUENCY + " TEXT," +
             DURATION + " REAL," +
             LISTCHALLENGE + "TEXT" +
@@ -44,7 +47,9 @@ public class ChallengeDAO extends DAOBase {
         value.put(ChallengeDAO.NAME, challenge.getName());
         value.put(ChallengeDAO.DURATION, challenge.getDuration());
         value.put(ChallengeDAO.FREQUENCY, challenge.getFrequency().name());
-        value.put(ChallengeDAO.STARTDATE, challenge.getStartDate().getTimeInMillis());
+        value.put(ChallengeDAO.STARTDATEYEAR, challenge.getStartDate().get(Calendar.YEAR));
+        value.put(ChallengeDAO.STARTDATEMONTH, challenge.getStartDate().get(Calendar.MONTH));
+        value.put(ChallengeDAO.STARTDATEDAY, challenge.getStartDate().get(Calendar.DAY_OF_MONTH));
         value.put(ChallengeDAO.LISTCHALLENGE, challenge.getChallengesList().toString());
         mDb.insert(ChallengeDAO.TABLE_NAME, null, value);
 
@@ -65,7 +70,9 @@ public class ChallengeDAO extends DAOBase {
         value.put(ChallengeDAO.NAME, challenge.getName());
         value.put(ChallengeDAO.DURATION, challenge.getDuration());
         value.put(ChallengeDAO.FREQUENCY, challenge.getFrequency().name());
-        value.put(ChallengeDAO.STARTDATE, challenge.getStartDate().getTimeInMillis());
+        value.put(ChallengeDAO.STARTDATEYEAR, challenge.getStartDate().get(Calendar.YEAR));
+        value.put(ChallengeDAO.STARTDATEMONTH, challenge.getStartDate().get(Calendar.MONTH));
+        value.put(ChallengeDAO.STARTDATEDAY, challenge.getStartDate().get(Calendar.DAY_OF_MONTH));
         value.put(ChallengeDAO.LISTCHALLENGE, challenge.getChallengesList().toString());
         mDb.update(TABLE_NAME, value, KEY  + " = ?", new String[] {String.valueOf(id)});
     }
@@ -83,31 +90,37 @@ public class ChallengeDAO extends DAOBase {
             String name = c.getString(1);
             int duration = c.getInt(2);
             String frequency = c.getString(3);
-            startDate.setTimeInMillis(c.getLong(4));
+            startDate.set(Calendar.YEAR, c.getInt(4));
+            startDate.set(Calendar.MONTH, c.getInt(5));
+            startDate.set(Calendar.DAY_OF_MONTH, c.getInt(6));
             ArrayList<String> challenges = new ArrayList<>();
-            String[] allChallenges = c.getString(5).substring(1, c.getString(5).length() - 1).split(",");
+            String test =  c.getString(7);
+            String[] allChallenges = c.getString(7).substring(1, c.getString(7).length() - 1).split(",");
             for(String challenge : allChallenges){
-                challenges.add(challenge);
+                challenges.add(challenge.trim());
             }
             challengesList.add(new Challenge(id, name, duration, FrequencyEnum.valueOf(frequency), startDate, challenges));
         }
         return challengesList;
     }
 
-    public Challenge selectLastChallenge(int id) throws Exception {
+    public Challenge selectLastChallenge() throws Exception {
         Cursor c = mDb.rawQuery("select * from " + TABLE_NAME, null);
         DatabaseUtils.dumpCursorToString(c);
         if(c == null){
-            throw new Exception("cursor empty, no response to the request : " + "select * from " + TABLE_NAME + "WHERE ID = " + id, null);
+            throw new Exception("nothing to select", null);
         }
         c.moveToLast();
         Calendar startDate = Calendar.getInstance();
+        int id = c.getInt(0);
         String name = c.getString(1);
         int duration = c.getInt(2);
         String frequency = c.getString(3);
-        startDate.setTimeInMillis(c.getLong(4));
+        startDate.set(Calendar.YEAR, c.getInt(4));
+        startDate.set(Calendar.MONTH, c.getInt(5));
+        startDate.set(Calendar.DAY_OF_MONTH, c.getInt(6));
         ArrayList<String> challenges = new ArrayList<>();
-        String[] allChallenges = c.getString(5).substring(1, c.getString(5).length() - 1).split(",");
+        String[] allChallenges = c.getString(7).substring(1, c.getString(7).length() - 1).split(",");
         for(String challenge : allChallenges){
             challenges.add(challenge);
         }
@@ -125,12 +138,23 @@ public class ChallengeDAO extends DAOBase {
         String name = c.getString(1);
         int duration = c.getInt(2);
         String frequency = c.getString(3);
-        startDate.setTimeInMillis(c.getLong(4));
+        startDate.set(Calendar.YEAR, c.getInt(4));
+        startDate.set(Calendar.MONTH, c.getInt(5));
+        startDate.set(Calendar.DAY_OF_MONTH, c.getInt(6));
         ArrayList<String> challenges = new ArrayList<>();
-        String[] allChallenges = c.getString(5).substring(1, c.getString(5).length() - 1).split(",");
+        String[] allChallenges = c.getString(7).substring(1, c.getString(7).length() - 1).split(",");
         for(String challenge : allChallenges){
-            challenges.add(challenge);
+            challenges.add(challenge.trim());
         }
         return new Challenge(id, name, duration, FrequencyEnum.valueOf(frequency), startDate, challenges);
+    }
+
+    public int countChallengeAtDate(Calendar calendar){
+        Cursor c = mDb.rawQuery("select * from " + TABLE_NAME +
+                " WHERE " + STARTDATEYEAR + " = " + calendar.get(Calendar.YEAR) +
+                " AND " + STARTDATEMONTH + " = " + calendar.get(Calendar.MONTH) +
+                " AND " + STARTDATEDAY + " = " + calendar.get(Calendar.DAY_OF_MONTH), null);
+        DatabaseUtils.dumpCursorToString(c);
+        return c.getCount();
     }
 }

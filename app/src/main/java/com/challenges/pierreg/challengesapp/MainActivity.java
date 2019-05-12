@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
@@ -68,7 +70,16 @@ public class MainActivity extends AppCompatActivity {
 
             TextView challengeOfTheDay = new TextView(this);
             Calendar dateOfTheChallenge = challengeToShow.getStartDate();
-            challengeOfTheDay.setText(DateFormat.getDateInstance().format(dateOfTheChallenge.getTime()) + " : " + challengeToShow.getChallengesList().get(0));
+            GregorianCalendar maxDate = new GregorianCalendar();
+            maxDate.setTime(new Date(Long.MAX_VALUE));
+
+
+            if(dateOfTheChallenge.get(Calendar.YEAR) > 10000){
+                challengeOfTheDay.setText("start with : " + challengeToShow.getChallengesList().get(0));
+            }
+            else{
+                challengeOfTheDay.setText(DateFormat.getDateInstance().format(dateOfTheChallenge.getTime()) + " : " + challengeToShow.getChallengesList().get(0));
+            }
             challengeOfTheDay.setPadding(0, 30, 0, 0);
             challengeOfTheDay.setGravity(Gravity.RIGHT);
 
@@ -85,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             layoutOneChallenge.setPadding(10, 10, 10, 10);
             Random random = new Random();
             layoutOneChallenge.setBackgroundColor(Color.argb(255, 64 + random.nextInt(192), 128 + random.nextInt(128), 255));
-            layoutOneChallenge.addView(IdOfChallenge, layoutParam);
+            layoutOneChallenge.addView(IdOfChallenge, layoutParamInvisible);
             layoutOneChallenge.addView(nameOfChallenge, layoutParam);
             layoutOneChallenge.addView(challengeOfTheDay, layoutParam);
             linearLayout.addView(layoutOneChallenge, layoutParam);

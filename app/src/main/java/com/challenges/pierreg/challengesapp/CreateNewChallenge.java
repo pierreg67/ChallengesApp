@@ -13,9 +13,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
@@ -30,6 +34,8 @@ public class CreateNewChallenge extends AppCompatActivity {
     private Button buttonValidateChallenge;
     private EditText editMainName;
     private int duration = 1;
+    private RadioGroup frequencyRadioGroup;
+    private Calendar startDate;
     private List<EditText> challengesListEditor = new ArrayList<EditText>() {};
     private Resources res;
     private LinearLayout linearLayout;
@@ -46,7 +52,7 @@ public class CreateNewChallenge extends AppCompatActivity {
 
         editMainName = (EditText) findViewById(R.id.editMainName);
 
-
+        frequencyRadioGroup = (RadioGroup) findViewById(R.id.radioFrequency);
 
         buttonValidateChallenge = (Button) findViewById(R.id.buttonValidation);
         buttonValidateChallenge.setOnClickListener(validateChallenge);
@@ -63,7 +69,7 @@ public class CreateNewChallenge extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 duration++;
-                addOneAction("Enter action");
+                addOneAction("??--??");
             }
         });
 
@@ -75,6 +81,7 @@ public class CreateNewChallenge extends AppCompatActivity {
             //TODO : adapt frequency : existingChallenge.getFrequency();
             challengeId = existingChallenge.getId();
             duration = existingChallenge.getDuration();
+            startDate = existingChallenge.getStartDate();
             addAllAction(existingChallenge);
         }
     }
@@ -87,16 +94,23 @@ public class CreateNewChallenge extends AppCompatActivity {
             for (EditText text : challengesListEditor) {
                 challengesList.add(text.getText().toString());
             }
-//            ArrayList fakeList = new ArrayList(){};
-//            fakeList.add("pompes");
-//            fakeList.add("abdos");
-//            fakeList.add("squat");
-//            Challenge newChallenge = new Challenge(-1, "name", 3, FrequencyEnum.DAILY, new GregorianCalendar(2019, 6, 29), fakeList);
-            // TODO : Remove + change date
-            Challenge newChallenge = new Challenge(-1, editMainName.getText().toString(), duration, FrequencyEnum.DAILY, new GregorianCalendar(2019, 6, 29), challengesList);
+
+            GregorianCalendar maxDate = new GregorianCalendar();
+            maxDate.setTime(new Date(Long.MAX_VALUE));
+            if(startDate == null){
+                startDate = maxDate;
+            }
+            Challenge newChallenge = new Challenge(-1, editMainName.getText().toString(), duration, FrequencyEnum.DAILY, startDate, challengesList);
+
             Intent challengeActivity = new Intent(CreateNewChallenge.this, MainActivity.class);
 
             try {
+                if(newChallenge.getName().isEmpty()){
+                    throw new Exception("Please add a name");
+                }
+                if(challengesList.get(0).isEmpty()){
+                    throw new Exception("first activity cannot be empty");
+                }
                 ChallengeDAO dao = new ChallengeDAO(CreateNewChallenge.this);
                 dao.open();
                 if(challengeId == -1){
@@ -110,8 +124,9 @@ public class CreateNewChallenge extends AppCompatActivity {
                 Toast.makeText(CreateNewChallenge.this, test.getName() + "challenge created!! for " + test.getDuration() + " " + test.getFrequency().name(), Toast.LENGTH_SHORT).show();
                 dao.close();
             } catch (Exception e) {
+                Toast.makeText(CreateNewChallenge.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 System.out.println("Message : " + e.getMessage());
-                System.out.println("Cause : " + e.getCause()); //TODO : TOAST
+                System.out.println("Cause : " + e.getCause());
             }
 
         }

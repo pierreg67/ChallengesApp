@@ -15,7 +15,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String CHALLENGE_NAME = "name";
     public static final String CHALLENGE_DURATION = "duration";
     public static final String CHALLENGE_FREQUENCY = "frequency";
-    public static final String CHALLENGE_STARTDATE = "date";
+    public static final String CHALLENGE_STARTDATEYEAR = "startYear";
+    public static final String CHALLENGE_STARTDATEMONTH = "startMonth";
+    public static final String CHALLENGE_STARTDATEDAY = "startDay";
     public static final String CHALLENGE_LIST = "listChallenges";
 
 
@@ -26,7 +28,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     CHALLENGE_NAME + " TEXT, " +
                     CHALLENGE_DURATION + " REAL, " +
                     CHALLENGE_FREQUENCY + " TEXT, " +
-                    CHALLENGE_STARTDATE + " REAL, " +
+                    CHALLENGE_STARTDATEYEAR + " REAL, " +
+                    CHALLENGE_STARTDATEMONTH + " REAL, " +
+                    CHALLENGE_STARTDATEDAY + " REAL, " +
                     CHALLENGE_LIST + " TEXT" + ");";
 
     public static final String CHALLENGE_TABLE_DROP = "DROP TABLE IF EXISTS " + CHALLENGE_TABLE_NAME + ";";
